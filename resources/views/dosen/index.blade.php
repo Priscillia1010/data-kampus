@@ -1,29 +1,21 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dosen</title>
     <link rel="stylesheet" type="text/css"
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
-
-    <title>Mahasiswa</title>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-
 </head>
 
-<body class="antialiased">
+<body>
     <div class="container" id="appVue">
         <div class="modal fade" id="modalTambahData" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close btn-danger rounded border-danger" data-dismiss="modal"
-                            @click="closeModal">×</button>
-                        <h4 class="modal-title">Mahasiswa</h4>
+                            @click.prevent="closeModal">×</button>
+                        <h4 class="modal-title">Dosen</h4>
                     </div>
 
                     <div class="modal-body">
@@ -35,21 +27,21 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputPassword1">Email</label>
-                                    <input v-model="email" type="text" class="form-control"
-                                        placeholder="Masukan Email"></input>
+                                    <input v-model="email" type="text" class="form-control" placeholder="Masukan Email">
                                 </div>
                             </div>
                             <!-- /.box-body -->
 
                             <div class="box-footer">
-                                <button @click.prevent="storeMahasiswa" type="submit"
-                                    class="btn btn-primary mt-2">Submit</button>
+                                <button @click.prevent="storeDosen" type="submit"
+                                    class="btn btn-primary mt-3">Submit</button>
                             </div>
                         </form>
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"
+                            @click.prevent="closeModal">Close</button>
                     </div>
                 </div>
             </div>
@@ -69,18 +61,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <template>
-                                <tr v-for="item in data_mahasiswa">
-                                    <td>@{{item.nama}}</td>
-                                    <td>@{{item.email}}</td>
-                                    <td>@{{item.created_at}}</td>
-                                    <td>@{{item.updated_at}}</td>
+                            <template v-for="item in data_dosen">
+                                <tr>
+                                    <td>@{{ item.nama }}</td>
+                                    <td>@{{ item.email }}</td>
+                                    <td>@{{ item.created_at }}</td>
+                                    <td>@{{ item.updated_at }}</td>
                                     <td>
-                                        <button @click.prevent="editData(item.id)"
-                                            class="btn btn-xs btn-warning">Edit</button>
-
-                                        <button v-on:click.prevent="hapusData(item.id)"
-                                            class="btn btn-xs btn-danger">Hapus</button>
+                                        <button @click.prevent="editData(item.id)" class="btn btn-xs btn-warning">Edit
+                                        </button>
+                                        <button @click.prevent="hapusData(item.id)" class="btn btn-xs btn-danger">Hapus
+                                        </button>
                                     </td>
                                 </tr>
                             </template>
@@ -88,21 +79,23 @@
                     </table>
                 </div>
             </div>
-
         </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
     var vue = new Vue({
         el: '#appVue',
         data: {
-            data_mahasiswa: [],
+            data_dosen: [],
             nama: null,
             email: null,
             id_edit: null
@@ -112,12 +105,12 @@
         },
         methods: {
             getData: function() {
-                var url = "{{ url('get-mahasiswa') }}";
+                var url = "{{ url('get-dosen') }}";
 
                 axios.get(url)
                     .then(res => {
                         console.log(res);
-                        this.data_mahasiswa = res.data;
+                        this.data_dosen = res.data;
                     })
                     .catch(err => {
                         console.log(err);
@@ -129,21 +122,20 @@
             closeModal: function() {
                 $('#modalTambahData').modal('hide');
             },
-            storeMahasiswa: function() {
+            storeDosen: function() {
                 var form_data = new FormData();
                 form_data.append("nama", this.nama);
                 form_data.append("email", this.email);
                 form_data.append("id_edit", this.id_edit);
 
-                var url = "{{ url('store-mahasiswa') }}";
+                var url = "{{ url('store-dosen') }}";
 
                 axios.post(url, form_data)
-                    .then((res) => {
+                    .then(res => {
                         $('#modalTambahData').modal('hide');
-                        alert("Success");
+                        alert('Success');
                         this.nama = null;
                         this.email = null;
-                        this.id_edit = null;
 
                         this.getData();
                     })
@@ -155,13 +147,13 @@
             editData: function(id) {
                 this.id_edit = id;
 
-                var url = "{{ url('get-mahasiswa') }}" + '/' + id;
+                var url = "{{ url('get-dosen') }}" + '/' + id;
 
                 axios.put(url)
                     .then(res => {
-                        var mahasiswa = res.data;
-                        this.nama = mahasiswa.nama;
-                        this.email = mahasiswa.email;
+                        var dosen = res.data;
+                        this.nama = dosen.nama;
+                        this.email = dosen.email;
 
                         this.tambahData();
                     })
@@ -171,16 +163,17 @@
                     })
             },
             hapusData: function(id) {
-                var url = "{{ url('hapus-mahasiswa') }}" + '/' + id;
+                var url = "{{ url('hapus-dosen') }}" + '/' + id;
+
                 axios.delete(url)
-                    .then(resp => {
-                        console.log(resp);
+                    .then(res => {
+                        console.log(res);
                         this.getData();
                     })
                     .catch(err => {
-                        alert('error');
+                        alert("error");
                         console.log(err);
-                    });
+                    })
             }
         }
     })
