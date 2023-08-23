@@ -47,6 +47,10 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-md-3">
+                <input type="text" class="form-control mt-3" placeholder="Search" v-model="search"
+                    v-on:keyup="getData()">
+            </div>
             <div class="col-md-12">
                 <button class="btn btn-md btn-primary mt-3" @click.prevent="tambahData">Tambah</button>
                 <div class="table-responsive">
@@ -78,6 +82,24 @@
                         </tbody>
                     </table>
                 </div>
+                <div>
+                    <button v-if="prev_page_url" v-on:click.prevent="gantiHalaman(prev_page_url)"
+                        class="btn btn-primary">Prev</button>
+                    <button v-if="next_page_url" v-on:click.prevent="gantiHalaman(next_page_url)"
+                        class="btn btn-primary">Next</button>
+                </div>
+
+                <div class="row mt-3 mb-2">
+                    <div class="col-md-1">
+                        <select class="form-control" v-model="paging" v-on:change="getData()">
+                            <option value="1">1</option>
+                            <option value="3">3</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                </div>
+                Showing @{{ from }} to @{{ to }} of @{{ total }} entries.
             </div>
         </div>
     </div>
@@ -95,22 +117,49 @@
     var vue = new Vue({
         el: '#appVue',
         data: {
+            url: '',
             data_dosen: [],
+
+            paging: '',
+
+            search: '',
+
+            from: '',
+            to: '',
+            total: '',
+
             nama: null,
             email: null,
-            id_edit: null
+            id_edit: null,
+
+            next_page_url: '',
+            prev_page_url: ''
         },
         mounted() {
+            this.paging = 5;
+            this.url = "{{ url('get-master-dosen-paging') }}";
             this.getData();
         },
         methods: {
             getData: function() {
                 var url = "{{ url('get-dosen') }}";
 
-                axios.get(url)
+                axios.get(this.url, {
+                        params: {
+                            paging: this.paging,
+                            search: this.search,
+                        }
+                    })
                     .then(res => {
                         console.log(res);
-                        this.data_dosen = res.data;
+                        this.data_dosen = res.data.data;
+
+                        this.next_page_url = res.data.next_page_url;
+                        this.prev_page_url = res.data.prev_page_url;
+
+                        this.from = res.data.from;
+                        this.to = res.data.to;
+                        this.total = res.data.total;
                     })
                     .catch(err => {
                         console.log(err);
@@ -174,6 +223,10 @@
                         alert("error");
                         console.log(err);
                     })
+            },
+            gantiHalaman: function(url) {
+                this.url = url;
+                this.getData();
             }
         }
     })

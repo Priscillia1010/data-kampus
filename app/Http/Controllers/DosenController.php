@@ -45,4 +45,14 @@ class DosenController extends Controller
         
         return response()->json('sukses', 200);
     }
+
+    public function get_dosen_paging() {
+        $paging = request('paging');
+        $search = request('search');
+        $data = Dosen::when($search, function ($query, $search) {
+            return $query->where('nama', 'like', "%$search%")->orWhere('email', 'like', "%$search%");;
+        })
+        ->select(['id', 'nama', 'email', 'created_at', 'updated_at'])->orderBy('nama')->paginate($paging);
+        return response()->json($data);
+    }
 }

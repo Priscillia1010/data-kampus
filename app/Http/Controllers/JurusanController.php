@@ -45,4 +45,14 @@ class JurusanController extends Controller
         
         return response ()->json('sukses', 200);
     }
+
+    public function get_jurusan_paging() {
+        $paging = request('paging');
+        $search = request('search');
+        $data = Jurusan::when($search, function ($query, $search) {
+            return $query->where('fakultas', 'like', "%$search%")->orWhere('jurusan', 'like', "%$search%");;
+        })
+        ->select(['id', 'fakultas', 'jurusan', 'created_at', 'updated_at'])->orderBy('fakultas')->paginate($paging);
+        return response()->json($data);
+    }
 }
