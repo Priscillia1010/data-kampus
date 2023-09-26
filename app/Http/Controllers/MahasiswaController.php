@@ -53,4 +53,9 @@ class MahasiswaController extends Controller
         ->select(['id', 'nama', 'email', 'created_at', 'updated_at'])->orderBy('nama')->paginate($paging);
         return response()->json($data);
     }
+    public function get_mahasiswa_jurusan() {
+        $mahasiswas =  Mahasiswa::find(1);
+        $jurusan = $mahasiswas->jurusan;
+        return $jurusan;
+    }
 }

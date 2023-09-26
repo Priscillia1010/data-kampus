@@ -55,4 +55,16 @@ class JurusanController extends Controller
         ->select(['id', 'fakultas', 'jurusan', 'created_at', 'updated_at'])->orderBy('fakultas')->paginate($paging);
         return response()->json($data);
     }
+
+    public function get_jurusan_mahasiswa() {
+        $jurusan =  Jurusan::find(6);
+        $mahasiswas = $jurusan->mahasiswas;
+        return $mahasiswas;
+    }
+
+    public function get_jurusan_dosen() {
+        $jurusan =  Jurusan::find(3);
+        $dosen = $jurusan->dosen;
+        return $dosen;
+    }
 }

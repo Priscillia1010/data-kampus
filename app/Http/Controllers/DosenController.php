@@ -55,4 +55,10 @@ class DosenController extends Controller
         ->select(['id', 'nama', 'email', 'created_at', 'updated_at'])->orderBy('nama')->paginate($paging);
         return response()->json($data);
     }
+
+    public function get_dosen_jurusan() {
+        $dosen =  Dosen::find(1);
+        $jurusan = $dosen->jurusan;
+        return $jurusan;
+    }
 }

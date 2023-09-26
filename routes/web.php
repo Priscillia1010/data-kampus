@@ -27,6 +27,7 @@ Route::post('store-mahasiswa', [MahasiswaController::class, 'store_mahasiswa']);
 Route::put('get-mahasiswa/{id}', [MahasiswaController::class, 'get_detail']);
 Route::delete('hapus-mahasiswa/{id}', [MahasiswaController::class, 'hapus_mahasiswa']);
 Route::get('get-master-mahasiswa-paging', [MahasiswaController::class, 'get_mahasiswa_paging']);
+Route::get('get-mahasiswa-jurusan', [MahasiswaController::class, 'get_mahasiswa_jurusan']);
 
 // Jurusan
 Route::get('list/jurusan', [JurusanController::class, 'index']);
@@ -35,6 +36,9 @@ Route::post('store-jurusan', [JurusanController::class, 'store_jurusan']);
 Route::put('get-jurusan/{id}', [JurusanController::class, 'get_detail']);
 Route::delete('hapus-jurusan/{id}', [JurusanController::class, 'hapus_jurusan']);
 Route::get('get-master-jurusan-paging', [JurusanController::class, 'get_jurusan_paging']);
+Route::get('get-jurusan-mahasiswa', [JurusanController::class, 'get_jurusan_mahasiswa']);
+Route::get('get-jurusan-dosen', [JurusanController::class, 'get_jurusan_dosen']);
+
 
 //Dosen
 Route::get('list/dosen', [DosenController::class, 'index']);
@@ -43,3 +47,4 @@ Route::post('store-dosen', [DosenController::class, 'store_dosen']);
 Route::put('get-dosen/{id}', [DosenController::class, 'get_detail']);
 Route::delete('hapus-dosen/{id}', [DosenController::class, 'hapus_dosen']);
 Route::get('get-master-dosen-paging', [DosenController::class, 'get_dosen_paging']);
+Route::get('get-dosen-jurusan', [DosenController::class, 'get_dosen_jurusan']);
